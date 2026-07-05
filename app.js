@@ -160,6 +160,7 @@ function registerEventListeners() {
             e.preventDefault();
             const target = item.getAttribute("data-target");
             switchTab(target);
+            document.getElementById("app-layout").classList.remove("sidebar-mobile-active");
         });
     });
 
@@ -178,12 +179,29 @@ function registerEventListeners() {
     document.getElementById("sidebar-toggle").addEventListener("click", () => {
         const layout = document.getElementById("app-layout");
         const toggleIcon = document.getElementById("toggle-icon");
+        
+        // If on mobile viewport, sidebar toggle acts as close button for overlay
+        if (window.innerWidth <= 768) {
+            layout.classList.remove("sidebar-mobile-active");
+            return;
+        }
+        
         layout.classList.toggle("sidebar-collapsed");
         if (layout.classList.contains("sidebar-collapsed")) {
             toggleIcon.className = "fa-solid fa-chevron-right";
         } else {
             toggleIcon.className = "fa-solid fa-chevron-left";
         }
+    });
+
+    // Mobile Hamburger Toggle
+    document.getElementById("mobile-menu-btn").addEventListener("click", () => {
+        document.getElementById("app-layout").classList.add("sidebar-mobile-active");
+    });
+
+    // Mobile Backdrop Click-to-close
+    document.getElementById("sidebar-backdrop").addEventListener("click", () => {
+        document.getElementById("app-layout").classList.remove("sidebar-mobile-active");
     });
 
     // User role switcher
