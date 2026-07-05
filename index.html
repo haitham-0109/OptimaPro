@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link rel="stylesheet" href="style.css">
+    <!-- SVG Favicon to prevent 404 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
     <!-- Chart.js for Interactive Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -25,11 +27,11 @@
             <form id="login-form">
                 <div class="login-form-group">
                     <label for="login-email">Email Address</label>
-                    <input type="email" id="login-email" class="glass-input" value="manager@optimapro.com" required>
+                    <input type="email" id="login-email" class="glass-input" value="manager@optimapro.com" autocomplete="username" required>
                 </div>
                 <div class="login-form-group">
                     <label for="login-password">Password</label>
-                    <input type="password" id="login-password" class="glass-input" value="••••••••" required>
+                    <input type="password" id="login-password" class="glass-input" value="••••••••" autocomplete="current-password" required>
                 </div>
                 <div class="login-form-options">
                     <label class="login-checkbox-label">
