@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptimaPro - Industry Production & Inventory System</title>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js for Interactive Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- SCREEN 1: LOGIN (Overlay View) -->
+    <div id="login-screen">
+        <div class="glass-panel login-card">
+            <div class="login-logo">
+                <div class="logo-icon">OP</div>
+                <h2>OptimaPro ERP</h2>
+                <p>Production & Inventory Control Hub</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="login-form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" class="glass-input" value="manager@optimapro.com" required>
+                </div>
+                <div class="login-form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="glass-input" value="••••••••" required>
+                </div>
+                <div class="login-form-options">
+                    <label class="login-checkbox-label">
+                        <input type="checkbox" id="login-remember" checked> Remember Me
+                    </label>
+                    <a href="#" class="login-forgot-link">Forgot Password?</a>
+                </div>
+                <button type="submit" class="glass-btn glass-btn-primary login-btn-submit">Secure Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo-icon">OP</div>
+                    <span class="logo-text">OptimaPro</span>
+                </div>
+                <button class="sidebar-toggle-btn" id="sidebar-toggle">
+                    <i class="fa-solid fa-chevron-left" id="toggle-icon"></i>
+                </button>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="menu-item active" data-target="dashboard">
+                    <a href="#"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+                </li>
+                <li class="menu-item" data-target="raw-materials">
+                    <a href="#"><i class="fa-solid fa-cubes"></i><span>Raw Materials</span></a>
+                </li>
+                <li class="menu-item" data-target="production">
+                    <a href="#"><i class="fa-solid fa-industry"></i><span>Production</span></a>
+                </li>
+                <li class="menu-item" data-target="machines">
+                    <a href="#"><i class="fa-solid fa-gears"></i><span>Machines</span></a>
+                </li>
+                <li class="menu-item" data-target="electricity">
+                    <a href="#"><i class="fa-solid fa-bolt"></i><span>Electricity</span></a>
+                </li>
+                <li class="menu-item" data-target="working-materials">
+                    <a href="#"><i class="fa-solid fa-box-open"></i><span>Working Material</span></a>
+                </li>
+                <li class="menu-item" data-target="sales">
+                    <a href="#"><i class="fa-solid fa-cart-shopping"></i><span>Sales</span></a>
+                </li>
+                <li class="menu-item" data-target="expenses">
+                    <a href="#"><i class="fa-solid fa-wallet"></i><span>Expenses</span></a>
+                </li>
+                <li class="menu-item" data-target="profit-analysis">
+                    <a href="#"><i class="fa-solid fa-coins"></i><span>Profit Analysis</span></a>
+                </li>
+                <li class="menu-item" data-target="reports">
+                    <a href="#"><i class="fa-solid fa-file-invoice-dollar"></i><span>Reports</span></a>
+                </li>
+                <li class="menu-item" data-target="suppliers">
+                    <a href="#"><i class="fa-solid fa-truck-field"></i><span>Suppliers</span></a>
+                </li>
+                <li class="menu-item" data-target="customers">
+                    <a href="#"><i class="fa-solid fa-users"></i><span>Customers</span></a>
+                </li>
+                <li class="menu-item" data-target="settings">
+                    <a href="#"><i class="fa-solid fa-sliders"></i><span>Settings</span></a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="user-avatar" id="avatar-letter">M</div>
+                <div class="user-info-text">
+                    <span id="sidebar-user-name">Manager</span>
+                    <span class="role-badge-sidebar" id="sidebar-role-badge">Manager</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-title-section">
+                    <h1 id="active-tab-title">Dashboard Overview</h1>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="global-search-container">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="global-search" class="glass-input" placeholder="Quick Search (e.g. Iron)...">
+                    </div>
+                    
+                    <div class="role-selector-container">
+                        <span>Role:</span>
+                        <select id="role-switcher">
+                            <option value="Admin">Administrator</option>
+                            <option value="Manager" selected>Manager</option>
+                            <option value="Operator">Operator</option>
+                        </select>
+                    </div>
+
+                    <button class="notification-bell-btn" id="notif-bell-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <div class="notification-dot" id="notif-badge"></div>
+                    </button>
+
+                    <div class="user-profile-header">
+                        <div class="user-avatar" id="header-avatar-letter">M</div>
+                        <div class="user-info-text">
+                            <span class="user-info-name" id="header-user-name">F. Manager</span>
+                            <span class="user-info-role" id="header-role-title">Production Manager</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ==========================================================
+                 SCREEN 2: DASHBOARD OVERVIEW
+                 ========================================================== -->
+            <section id="dashboard-view" class="view-section active">
+                <div class="dashboard-grid">
+                    <!-- Raw Material Stock -->
+                    <div class="glass-panel kpi-card blue">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Raw Material Stock</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-cubes"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-raw-stock">14,250 kg</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12%</span> vs last week
+                        </div>
+                    </div>
+                    <!-- Working Material Stock -->
+                    <div class="glass-panel kpi-card green">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Working Material Stock</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-box-open"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-working-stock">3,840 kg</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-trend-down"><i class="fa-solid fa-arrow-trend-down"></i> -4%</span> low threshold alerts
+                        </div>
+                    </div>
+                    <!-- Today's Production -->
+                    <div class="glass-panel kpi-card cyan">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Today's Production</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-industry"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-today-production">850 kg</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +8%</span> yield rate 94%
+                        </div>
+                    </div>
+                    <!-- Today's Sales -->
+                    <div class="glass-panel kpi-card info">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Today's Sales</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-cart-shopping"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-today-sales">$12,450</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +15%</span> orders fulfilled
+                        </div>
+                    </div>
+                    <!-- Electricity Cost Today -->
+                    <div class="glass-panel kpi-card danger">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Electricity Cost Today</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-bolt"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-electricity-cost">$320.50</div>
+                        <div class="kpi-footer">
+                            <span>Consumption: 2,130 kWh</span>
+                        </div>
+                    </div>
+                    <!-- Total Revenue -->
+                    <div class="glass-panel kpi-card cyan">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Total Revenue (Monthly)</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-total-revenue">$148,200</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +18.2%</span> target progress
+                        </div>
+                    </div>
+                    <!-- Total Expenses -->
+                    <div class="glass-panel kpi-card warning">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Total Expenses (Monthly)</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-wallet"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-total-expenses">$86,400</div>
+                        <div class="kpi-footer">
+                            <span>Including salaries & raw costs</span>
+                        </div>
+                    </div>
+                    <!-- Net Profit -->
+                    <div class="glass-panel kpi-card green">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Net Profit (Monthly)</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-coins"></i></div>
+                        </div>
+                        <div class="kpi-value" id="kpi-net-profit">$61,800</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-trend-up"><i class="fa-solid fa-arrow-trend-up"></i> Margin 41.7%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-details-row">
+                    <!-- Dynamic Charts View -->
+                    <div class="glass-panel chart-panel-container">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Production & Sales Performance</h3>
+                            <div class="action-buttons-group">
+                                <button class="glass-btn active" id="chart-btn-prod">Production Trend</button>
+                                <button class="glass-btn" id="chart-btn-sales">Sales Trend</button>
+                                <button class="glass-btn" id="chart-btn-elec">Electricity Usage</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="dashboardPerformanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Panels -->
+                    <div class="sidebar-panel">
+                        <!-- Quick Actions -->
+                        <div class="glass-panel quick-actions-panel">
+                            <h3>Quick Actions</h3>
+                            <div class="quick-actions-grid">
+                                <button class="glass-btn quick-action-btn" onclick="openModal('raw-material-modal')">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Add Material</span>
+                                </button>
+                                <button class="glass-btn quick-action-btn" onclick="openModal('production-modal')">
+                                    <i class="fa-solid fa-industry"></i>
+                                    <span>Log Production</span>
+                                </button>
+                                <button class="glass-btn quick-action-btn" onclick="openModal('sale-modal')">
+                                    <i class="fa-solid fa-cart-arrow-down"></i>
+                                    <span>Log Sale</span>
+                                </button>
+                                <button class="glass-btn quick-action-btn" onclick="openModal('barcode-modal')">
+                                    <i class="fa-solid fa-qrcode"></i>
+                                    <span>Scan Barcode</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activities -->
+                        <div class="glass-panel activity-feed-panel">
+                            <h3>Recent System Logs</h3>
+                            <div class="activity-list" id="recent-activities-list">
+                                <!-- Dynamically Rendered Activities -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 3: RAW MATERIAL MANAGEMENT
+                 ========================================================== -->
+            <section id="raw-materials-view" class="view-section">
+                <div class="glass-panel table-panel-header">
+                    <div class="table-search-filters">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="raw-search" class="glass-input" placeholder="Search Materials...">
+                        </div>
+                        <select id="raw-filter-status" class="filter-select">
+                            <option value="All">All Statuses</option>
+                            <option value="In Stock">In Stock</option>
+                            <option value="Low Stock">Low Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="action-buttons-group">
+                        <button class="glass-btn glass-btn-primary" onclick="openModal('raw-material-modal')">
+                            <i class="fa-solid fa-plus"></i> Add Material
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-panel table-responsive-container">
+                    <table class="management-table">
+                        <thead>
+                            <tr>
+                                <th>Material Name</th>
+                                <th>Supplier</th>
+                                <th>Quantity (kg)</th>
+                                <th>Cost per kg</th>
+                                <th>Total Cost</th>
+                                <th>Purchase Date</th>
+                                <th>Invoice Number</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="raw-materials-table-body">
+                            <!-- JS populated rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 4: PRODUCTION MANAGEMENT
+                 ========================================================== -->
+            <section id="production-view" class="view-section">
+                <div class="two-col-layout">
+                    <!-- Production Logging Form -->
+                    <div class="glass-panel production-form-panel">
+                        <h3 style="margin-bottom: 20px;">Log Production Batch</h3>
+                        <form id="production-log-form" class="production-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="prod-batch-name">Production Batch</label>
+                                    <input type="text" id="prod-batch-name" class="glass-input" placeholder="e.g. BATCH-092" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prod-date">Production Date</label>
+                                    <input type="date" id="prod-date" class="glass-input" required>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="prod-raw-used">Raw Material Used</label>
+                                    <select id="prod-raw-used" class="filter-select" required>
+                                        <!-- JS dynamic choices -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prod-qty-used">Quantity Used (kg)</label>
+                                    <input type="number" id="prod-qty-used" class="glass-input" min="1" step="any" placeholder="0" required>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="prod-wm-produced">Working Material Produced</label>
+                                    <select id="prod-wm-produced" class="filter-select" required>
+                                        <!-- JS dynamic choices -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prod-qty-output">Output Quantity (kg)</label>
+                                    <input type="number" id="prod-qty-output" class="glass-input" min="1" step="any" placeholder="0" required>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="prod-qty-waste">Waste Quantity (kg)</label>
+                                    <input type="number" id="prod-qty-waste" class="glass-input" min="0" step="any" placeholder="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prod-machine">Machine Used</label>
+                                    <select id="prod-machine" class="filter-select" required>
+                                        <!-- JS dynamic choices -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="calc-preview-card">
+                                <div class="calc-preview-row">
+                                    <span>Material Cost:</span>
+                                    <span id="prod-calc-mat-cost">$0.00</span>
+                                </div>
+                                <div class="calc-preview-row">
+                                    <span>Electricity Cost:</span>
+                                    <span id="prod-calc-elec-cost">$0.00</span>
+                                </div>
+                                <div class="calc-preview-row">
+                                    <span>Production Efficiency:</span>
+                                    <span id="prod-calc-efficiency">0%</span>
+                                </div>
+                                <div class="calc-preview-row">
+                                    <span>Estimated Cost:</span>
+                                    <span id="prod-calc-total">$0.00</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="glass-btn glass-btn-primary">
+                                <i class="fa-solid fa-industry"></i> Save Batch & Update Stocks
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Production Logs Table -->
+                    <div class="glass-panel" style="padding: 24px;">
+                        <h3 style="margin-bottom: 20px;">Production Batch Log</h3>
+                        <div class="table-responsive-container">
+                            <table class="management-table">
+                                <thead>
+                                    <tr>
+                                        <th>Batch</th>
+                                        <th>Material Used</th>
+                                        <th>Output</th>
+                                        <th>Waste</th>
+                                        <th>Calculated Cost</th>
+                                        <th>Eff. %</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="production-batches-body">
+                                    <!-- JS populated rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 5: MACHINE MANAGEMENT
+                 ========================================================== -->
+            <section id="machines-view" class="view-section">
+                <div class="glass-panel table-panel-header">
+                    <h3>Factory Machining Center</h3>
+                    <div class="action-buttons-group">
+                        <button class="glass-btn glass-btn-primary" onclick="openModal('machine-modal')">
+                            <i class="fa-solid fa-plus"></i> Add Machine
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="machines-grid" id="machines-container">
+                    <!-- JS generated Machine Cards -->
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 6: ELECTRICITY COST
+                 ========================================================== -->
+            <section id="electricity-view" class="view-section">
+                <div class="electricity-dashboard-grid">
+                    <!-- Electricity Input Card -->
+                    <div class="glass-panel calculator-panel">
+                        <h3 style="margin-bottom: 20px;">Electricity Cost Calculator</h3>
+                        <form id="electricity-calc-form" class="production-form">
+                            <div class="form-group">
+                                <label for="elec-rate">Electricity Rate (per kWh)</label>
+                                <div class="search-input-wrapper">
+                                    <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted);">$</span>
+                                    <input type="number" id="elec-rate" class="glass-input" style="padding-left:26px" min="0.01" step="0.001" value="0.15" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="elec-machine">Select Machine</label>
+                                <select id="elec-machine" class="filter-select" required>
+                                    <!-- JS choices -->
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="elec-hours">Running Hours Today</label>
+                                <input type="number" id="elec-hours" class="glass-input" min="0.1" max="24" step="0.1" placeholder="8.0" required>
+                            </div>
+
+                            <div class="calc-preview-card">
+                                <div class="calc-preview-row">
+                                    <span>Machine Power Rating:</span>
+                                    <span id="elec-calc-power">0.00 kW</span>
+                                </div>
+                                <div class="calc-preview-row">
+                                    <span>Daily Power Consumption:</span>
+                                    <span id="elec-calc-consumption">0.00 kWh</span>
+                                </div>
+                                <div class="calc-preview-row">
+                                    <span>Calculated Daily Cost:</span>
+                                    <span id="elec-calc-cost" style="color:var(--status-danger); font-weight:600">$0.00</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="glass-btn glass-btn-primary">
+                                <i class="fa-solid fa-plug"></i> Save Consumption Data
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Consumption Metrics & Weekly Reports -->
+                    <div class="glass-panel" style="padding: 24px;">
+                        <div class="panel-header" style="margin-bottom: 20px;">
+                            <h3>Electricity Utility Reports</h3>
+                            <div class="action-buttons-group">
+                                <button class="glass-btn active" id="elec-report-daily">Daily</button>
+                                <button class="glass-btn" id="elec-report-weekly">Weekly</button>
+                                <button class="glass-btn" id="elec-report-monthly">Monthly</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive-container">
+                            <table class="management-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Machine Name</th>
+                                        <th>Hours Run</th>
+                                        <th>Consumption (kWh)</th>
+                                        <th>Rate</th>
+                                        <th>Total Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="electricity-logs-body">
+                                    <!-- JS rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 7: WORKING MATERIAL INVENTORY
+                 ========================================================== -->
+            <section id="working-materials-view" class="view-section">
+                <div class="glass-panel table-panel-header">
+                    <div class="table-search-filters">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="wm-search" class="glass-input" placeholder="Search Inventory...">
+                        </div>
+                        <select id="wm-filter-status" class="filter-select">
+                            <option value="All">All Statuses</option>
+                            <option value="In Stock">In Stock</option>
+                            <option value="Low Stock">Low Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="action-buttons-group">
+                        <button class="glass-btn glass-btn-primary" onclick="openModal('working-material-modal')">
+                            <i class="fa-solid fa-plus"></i> Add Product Item
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-panel table-responsive-container">
+                    <table class="management-table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity (kg)</th>
+                                <th>Cost per kg</th>
+                                <th>Selling Price per kg</th>
+                                <th>Total Stock Value</th>
+                                <th>Expected Margins</th>
+                                <th>Stock Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="working-materials-table-body">
+                            <!-- JS dynamic items -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 8: SALES MANAGEMENT
+                 ========================================================== -->
+            <section id="sales-view" class="view-section">
+                <div class="glass-panel table-panel-header">
+                    <div class="table-search-filters">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="sales-search" class="glass-input" placeholder="Search Invoices...">
+                        </div>
+                        <select id="sales-filter-payment" class="filter-select">
+                            <option value="All">All Payments</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="action-buttons-group">
+                        <button class="glass-btn glass-btn-primary" onclick="openModal('sale-modal')">
+                            <i class="fa-solid fa-cart-arrow-down"></i> Log New Sale
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-panel table-responsive-container">
+                    <table class="management-table">
+                        <thead>
+                            <tr>
+                                <th>Invoice</th>
+                                <th>Customer</th>
+                                <th>Product</th>
+                                <th>Qty (kg)</th>
+                                <th>Selling Price</th>
+                                <th>Total Value</th>
+                                <th>Sales Date</th>
+                                <th>Payment Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-table-body">
+                            <!-- JS Dynamic Sales Logs -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 9: EXPENSE MANAGEMENT
+                 ========================================================== -->
+            <section id="expenses-view" class="view-section">
+                <div class="electricity-dashboard-grid">
+                    <!-- Log Expense Form -->
+                    <div class="glass-panel calculator-panel">
+                        <h3 style="margin-bottom: 20px;">Record Expense</h3>
+                        <form id="expense-log-form" class="production-form">
+                            <div class="form-group">
+                                <label for="exp-category">Expense Category</label>
+                                <select id="exp-category" class="filter-select" required>
+                                    <option value="Electricity">Electricity Utility</option>
+                                    <option value="Salaries">Staff Salaries</option>
+                                    <option value="Maintenance">Machinery Maintenance</option>
+                                    <option value="Transport">Logistics & Transport</option>
+                                    <option value="Miscellaneous">Miscellaneous Expenses</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="exp-amount">Amount ($)</label>
+                                <input type="number" id="exp-amount" class="glass-input" min="1" step="any" placeholder="0.00" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exp-date">Date</label>
+                                <input type="date" id="exp-date" class="glass-input" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exp-notes">Description / Memo</label>
+                                <textarea id="exp-notes" class="glass-input" style="resize:none; height:80px;" placeholder="e.g. Monthly maintenance check for Compressor A"></textarea>
+                            </div>
+
+                            <button type="submit" class="glass-btn glass-btn-primary">
+                                <i class="fa-solid fa-wallet"></i> Log Expense Entry
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Expenses History & Breakdown -->
+                    <div class="glass-panel" style="padding: 24px;">
+                        <div class="panel-header" style="margin-bottom: 20px;">
+                            <h3>Operational Expenses Registry</h3>
+                            <span id="expenses-month-total" style="font-weight:700; color:var(--status-danger)">Total: $0.00</span>
+                        </div>
+                        <div class="table-responsive-container">
+                            <table class="management-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expenses-table-body">
+                                    <!-- JS rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 10: PROFIT ANALYSIS
+                 ========================================================== -->
+            <section id="profit-analysis-view" class="view-section">
+                <!-- Aggregated profit indicators -->
+                <div class="profit-summary-grid">
+                    <div class="glass-panel kpi-card info">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Daily Net Profit</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-calendar-day"></i></div>
+                        </div>
+                        <div class="kpi-value" id="profit-kpi-daily">$0.00</div>
+                    </div>
+                    <div class="glass-panel kpi-card green">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Weekly Net Profit</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-calendar-week"></i></div>
+                        </div>
+                        <div class="kpi-value" id="profit-kpi-weekly">$0.00</div>
+                    </div>
+                    <div class="glass-panel kpi-card blue">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Monthly Net Profit</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-calendar-days"></i></div>
+                        </div>
+                        <div class="kpi-value" id="profit-kpi-monthly">$0.00</div>
+                    </div>
+                    <div class="glass-panel kpi-card cyan">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Yearly Profit Forecast</span>
+                            <div class="kpi-icon-wrapper"><i class="fa-solid fa-calendar"></i></div>
+                        </div>
+                        <div class="kpi-value" id="profit-kpi-yearly">$0.00</div>
+                    </div>
+                </div>
+
+                <!-- Analysis Detail Breakdown Charts -->
+                <div class="profit-chart-grid">
+                    <div class="glass-panel chart-panel-container">
+                        <h3 class="panel-title">Operational Cost Breakdown</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="profitCostsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-panel chart-panel-container">
+                        <h3 class="panel-title">Net Margins Comparison (Monthly)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="profitMarginChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 11: REPORTS CENTRE
+                 ========================================================== -->
+            <section id="reports-view" class="view-section">
+                <div class="reports-layout">
+                    <!-- Parameters configuration -->
+                    <div class="glass-panel report-generator-card">
+                        <h3>Report Architect</h3>
+                        <div class="form-group">
+                            <label>Choose Report Module</label>
+                            <button class="report-type-btn active" data-report="production">
+                                <i class="fa-solid fa-industry"></i>
+                                <div>
+                                    <div style="font-weight:600">Production Report</div>
+                                    <div style="font-size:0.75rem; color:var(--text-muted)">Outputs, efficiency, batch records</div>
+                                </div>
+                            </button>
+                            <button class="report-type-btn" data-report="sales">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <div>
+                                    <div style="font-weight:600">Sales & Billings Report</div>
+                                    <div style="font-size:0.75rem; color:var(--text-muted)">Revenue logs, invoices, margins</div>
+                                </div>
+                            </button>
+                            <button class="report-type-btn" data-report="inventory">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                                <div>
+                                    <div style="font-weight:600">Inventory Status Report</div>
+                                    <div style="font-size:0.75rem; color:var(--text-muted)">Raw vs Working stock levels</div>
+                                </div>
+                            </button>
+                            <button class="report-type-btn" data-report="electricity">
+                                <i class="fa-solid fa-bolt"></i>
+                                <div>
+                                    <div style="font-weight:600">Electricity Utility Audit</div>
+                                    <div style="font-size:0.75rem; color:var(--text-muted)">Machine consumptions and costs</div>
+                                </div>
+                            </button>
+                            <button class="report-type-btn" data-report="profit">
+                                <i class="fa-solid fa-coins"></i>
+                                <div>
+                                    <div style="font-weight:600">Financial Profit Analysis</div>
+                                    <div style="font-size:0.75rem; color:var(--text-muted)">EBITDA margins, revenue comparisons</div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Report Timeframe</label>
+                            <select id="report-timeframe" class="filter-select">
+                                <option value="today">Today</option>
+                                <option value="weekly">This Week</option>
+                                <option value="monthly" selected>This Month</option>
+                                <option value="yearly">This Fiscal Year</option>
+                            </select>
+                        </div>
+
+                        <div class="action-buttons-group" style="margin-top:12px;">
+                            <button class="glass-btn glass-btn-primary" style="flex:1" id="export-excel-btn">
+                                <i class="fa-regular fa-file-excel"></i> Export CSV / Excel
+                            </button>
+                            <button class="glass-btn glass-btn-success" style="flex:1" id="export-pdf-btn">
+                                <i class="fa-regular fa-file-pdf"></i> Export PDF Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live Preview Panel -->
+                    <div class="glass-panel reports-archive-card">
+                        <div class="panel-header" style="margin-bottom: 20px;">
+                            <h3>Live Document Preview</h3>
+                            <span id="preview-tag-indicator" class="status-badge completed">Preview</span>
+                        </div>
+                        <div id="report-preview-viewport" class="table-responsive-container" style="max-height: 480px;">
+                            <!-- Dynamically generated reports content -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 12: SUPPLIERS DIRECTORY
+                 ========================================================== -->
+            <section id="suppliers-view" class="view-section">
+                <div class="glass-panel table-panel-header">
+                    <div class="table-search-filters">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="supplier-search" class="glass-input" placeholder="Search Suppliers...">
+                        </div>
+                    </div>
+                    <button class="glass-btn glass-btn-primary" onclick="openModal('supplier-modal')">
+                        <i class="fa-solid fa-plus"></i> Add New Supplier
+                    </button>
+                </div>
+
+                <div class="glass-panel table-responsive-container">
+                    <table class="management-table">
+                        <thead>
+                            <tr>
+                                <th>Supplier Name</th>
+                                <th>Contact Representative</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Purchase History</th>
+                                <th>Pending Balance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suppliers-table-body">
+                            <!-- JS dynamic records -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 13: CUSTOMERS PORTAL
+                 ========================================================== -->
+            <section id="customers-view" class="view-section">
+                <div class="glass-panel table-panel-header">
+                    <div class="table-search-filters">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="customer-search" class="glass-input" placeholder="Search Customers...">
+                        </div>
+                    </div>
+                    <button class="glass-btn glass-btn-primary" onclick="openModal('customer-modal')">
+                        <i class="fa-solid fa-plus"></i> Register Customer
+                    </button>
+                </div>
+
+                <div class="glass-panel table-responsive-container">
+                    <table class="management-table">
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Contact Representative</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Order History Count</th>
+                                <th>Billing Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customers-table-body">
+                            <!-- JS rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ==========================================================
+                 SCREEN 14: SETTINGS CORE
+                 ========================================================== -->
+            <section id="settings-view" class="view-section">
+                <div class="glass-panel" style="padding: 32px;">
+                    <div class="settings-tabs-container">
+                        <!-- Navigation sidebar for settings modules -->
+                        <ul class="settings-nav-list">
+                            <li class="settings-nav-item active" data-pane="company-settings">Company Details</li>
+                            <li class="settings-nav-item" data-pane="financials-settings">Financials & Units</li>
+                            <li class="settings-nav-item" data-pane="user-roles-settings">User Roles & Access</li>
+                            <li class="settings-nav-item" data-pane="system-backup-settings">Backup & Reset</li>
+                        </ul>
+
+                        <!-- Contents display panes -->
+                        <div class="settings-content-panes">
+                            <!-- Company Settings Pane -->
+                            <div class="settings-pane active" id="company-settings">
+                                <h3 class="settings-pane-title">Company Configuration</h3>
+                                <form id="settings-company-form" class="production-form">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="set-company-name">Company Name</label>
+                                            <input type="text" id="set-company-name" class="glass-input" value="Industrial Solutions Ltd.">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="set-company-email">Corporate Email</label>
+                                            <input type="email" id="set-company-email" class="glass-input" value="operations@industrialsolutions.com">
+                                        </div>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="set-company-phone">Phone Office</label>
+                                            <input type="text" id="set-company-phone" class="glass-input" value="+1 (555) 019-2834">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="set-company-address">HQ Address</label>
+                                            <input type="text" id="set-company-address" class="glass-input" value="4820 Innovation Blvd, Suite 100">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="glass-btn glass-btn-primary" style="align-self:flex-start">Save Corporate Settings</button>
+                                </form>
+                            </div>
+
+                            <!-- Financials & Units Pane -->
+                            <div class="settings-pane" id="financials-settings">
+                                <h3 class="settings-pane-title">Financial & Metrics Configuration</h3>
+                                <form id="settings-financials-form" class="production-form">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="set-currency">System Currency</label>
+                                            <select id="set-currency" class="filter-select">
+                                                <option value="$">US Dollar ($)</option>
+                                                <option value="€">Euro (€)</option>
+                                                <option value="£">Pound Sterling (£)</option>
+                                                <option value="¥">Yen (¥)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="set-tax-rate">Sales Tax Rate (%)</label>
+                                            <input type="number" id="set-tax-rate" class="glass-input" value="8.0" min="0" max="100" step="0.1">
+                                        </div>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="set-elec-rate">Default Electricity Rate ($/kWh)</label>
+                                            <input type="number" id="set-elec-rate" class="glass-input" value="0.15" min="0" step="0.001">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="set-weight-unit">Weight Units</label>
+                                            <select id="set-weight-unit" class="filter-select">
+                                                <option value="kg">Kilograms (kg)</option>
+                                                <option value="lbs">Pounds (lbs)</option>
+                                                <option value="tons">Metric Tons (t)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="glass-btn glass-btn-primary" style="align-self:flex-start">Apply Parameters</button>
+                                </form>
+                            </div>
+
+                            <!-- User Roles Pane -->
+                            <div class="settings-pane" id="user-roles-settings">
+                                <h3 class="settings-pane-title">User Roles Settings</h3>
+                                <div class="table-responsive-container">
+                                    <table class="management-table">
+                                        <thead>
+                                            <tr>
+                                                <th>User Profile</th>
+                                                <th>Assigned Role</th>
+                                                <th>System Permissions</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Admin User (admin@optimapro.com)</td>
+                                                <td><span class="status-badge completed">Admin</span></td>
+                                                <td>Full system overrides, config saves, records wipe</td>
+                                                <td><span class="status-badge in-stock">Active</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Factory Manager (manager@optimapro.com)</td>
+                                                <td><span class="status-badge completed">Manager</span></td>
+                                                <td>Log inputs, generate reports, register orders</td>
+                                                <td><span class="status-badge in-stock">Active</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Shift Operator (operator@optimapro.com)</td>
+                                                <td><span class="status-badge idle">Operator</span></td>
+                                                <td>Run machines status, log batches, scan codes</td>
+                                                <td><span class="status-badge in-stock">Active</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Backup & Restore Database Pane -->
+                            <div class="settings-pane" id="system-backup-settings">
+                                <h3 class="settings-pane-title">System Database Management</h3>
+                                <p style="font-size:0.875rem; color:var(--text-secondary); margin-bottom:12px">
+                                    Export your workspace configuration, materials stock register, client indexes, and production logs as a portable JSON package.
+                                </p>
+                                <div class="action-buttons-group">
+                                    <button class="glass-btn glass-btn-primary" id="btn-backup-db">
+                                        <i class="fa-solid fa-download"></i> Backup Database (JSON)
+                                    </button>
+                                    <button class="glass-btn glass-btn-danger" id="btn-reset-db">
+                                        <i class="fa-solid fa-trash-can"></i> Factory Reset Workspace
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ==========================================================
+         MODALS MODULES
+         ========================================================== -->
+         
+    <!-- Modal 1: Raw Material Form -->
+    <div class="modal-overlay" id="raw-material-modal">
+        <div class="glass-panel modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="raw-modal-title">Add Raw Material</h3>
+                <button class="modal-close-btn" onclick="closeModal('raw-material-modal')">&times;</button>
+            </div>
+            <form id="raw-material-form">
+                <input type="hidden" id="raw-material-index">
+                <div class="modal-body production-form">
+                    <div class="form-group">
+                        <label for="raw-name">Material Name</label>
+                        <input type="text" id="raw-name" class="glass-input" placeholder="e.g. Pure Copper Ore" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="raw-supplier">Supplier Details</label>
+                        <select id="raw-supplier" class="filter-select" required>
+                            <!-- JS populated options -->
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="raw-qty">Initial Quantity (kg)</label>
+                            <input type="number" id="raw-qty" class="glass-input" min="0" step="any" placeholder="1000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="raw-cost">Cost per kg ($)</label>
+                            <input type="number" id="raw-cost" class="glass-input" min="0.01" step="0.01" placeholder="2.50" required>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="raw-date">Purchase Date</label>
+                            <input type="date" id="raw-date" class="glass-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="raw-invoice">Invoice Number</label>
+                            <input type="text" id="raw-invoice" class="glass-input" placeholder="INV-2026-X" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="glass-btn" onclick="closeModal('raw-material-modal')">Cancel</button>
+                    <button type="submit" class="glass-btn glass-btn-primary">Save Material</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Production Batch Form (Accessible as modal from dashboard quick action) -->
+    <div class="modal-overlay" id="production-modal">
+        <div class="glass-panel modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Quick Log Production Batch</h3>
+                <button class="modal-close-btn" onclick="closeModal('production-modal')">&times;</button>
+            </div>
+            <form id="modal-production-form">
+                <div class="modal-body production-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="modal-prod-batch-name">Production Batch</label>
+                            <input type="text" id="modal-prod-batch-name" class="glass-input" placeholder="e.g. BATCH-093" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-prod-date">Production Date</label>
+                            <input type="date" id="modal-prod-date" class="glass-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="modal-prod-raw-used">Raw Material Used</label>
+                            <select id="modal-prod-raw-used" class="filter-select" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-prod-qty-used">Quantity Used (kg)</label>
+                            <input type="number" id="modal-prod-qty-used" class="glass-input" min="1" step="any" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="modal-prod-wm-produced">Working Material Produced</label>
+                            <select id="modal-prod-wm-produced" class="filter-select" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-prod-qty-output">Output Quantity (kg)</label>
+                            <input type="number" id="modal-prod-qty-output" class="glass-input" min="1" step="any" placeholder="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="modal-prod-qty-waste">Waste Quantity (kg)</label>
+                            <input type="number" id="modal-prod-qty-waste" class="glass-input" min="0" step="any" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-prod-machine">Machine Used</label>
+                            <select id="modal-prod-machine" class="filter-select" required></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="glass-btn" onclick="closeModal('production-modal')">Cancel</button>
+                    <button type="submit" class="glass-btn glass-btn-primary">Save Batch</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 3: Machine Addition Form -->
+    <div class="modal-overlay" id="machine-modal">
+        <div class="glass-panel modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="machine-modal-title">Add Machinery</h3>
+                <button class="modal-close-btn" onclick="closeModal('machine-modal')">&times;</button>
+            </div>
+            <form id="machine-form">
+                <input type="hidden" id="machine-index">
+                <div class="modal-body production-form">
+                    <div class="form-group">
+                        <label for="mach-name">Machine Name</label>
+                        <input type="text" id="mach-name" class="glass-input" placeholder="e.g. Hydraulic Extruder A" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="mach-power">Power Rating (kW)</label>
+                            <input type="number" id="mach-power" class="glass-input" min="0.1" step="0.1" placeholder="45.0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mach-status">Initial Status</label>
+                            <select id="mach-status" class="filter-select">
+                                <option value="Idle">Idle</option>
+                                <option value="Running">Running</option>
+                                <option value="Maintenance">Maintenance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="mach-hours-today">Running Hours Today</label>
+                            <input type="number" id="mach-hours-today" class="glass-input" min="0" max="24" step="0.1" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="mach-hours-total">Total Lifetime Running Hours</label>
+                            <input type="number" id="mach-hours-total" class="glass-input" min="0" step="1" value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="glass-btn" onclick="closeModal('machine-modal')">Cancel</button>
+                    <button type="submit" class="glass-btn glass-btn-primary">Save Machine</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 4: Working Material / Product Form -->
+    <div class="modal-overlay" id="working-material-modal">
+        <div class="glass-panel modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="wm-modal-title">Add Inventory Product Item</h3>
+                <button class="modal-close-btn" onclick="closeModal('working-material-modal')">&times;</button>
+            </div>
+            <form id="working-material-form-inner">
+                <input type="hidden" id="wm-index">
+                <div class="modal-body production-form">
+                    <div class="form-group">
+                        <label for="wm-name">Product Name</label>
+                        <input type="text" id="wm-name" class="glass-input" placeholder="e.g. Copper Wire Coils 10mm" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="wm-qty">Stock Quantity (kg)</label>
+                            <input type="number" id="wm-qty" class="glass-input" min="0" step="any" placeholder="500" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="wm-cost">Cost per kg ($)</label>
+                            <input type="number" id="wm-cost" class="glass-input" min="0.01" step="0.01" placeholder="3.20" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="wm-price">Selling Price per kg ($)</label>
+                        <input type="number" id="wm-price" class="glass-input" min="0.01" step="0.01" placeholder="6.50" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="glass-btn" onclick="closeModal('working-material-modal')">Cancel</button>
+                    <button type="submit" class="glass-btn glass-btn-primary">Save Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 5: Log Sale Form -->
+    <div class="modal-overlay" id="sale-modal">
+        <div class="glass-panel modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Log Sales Transaction</h3>
+                <button class="modal-close-btn" onclick="closeModal('sale-modal')">&times;</button>
+            </div>
+            <form id="sale-form">
+                <div class="modal-body production-form">
+                    <div class="form-group">
+                        <label for="sale-customer">Customer</label>
+                        <select id="sale-customer" class="filter-select" required>
+                            <!-- JS customers list -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sale-product">Working Material / Product</label>
+                        <select id="sale-product" class="filter-select" required>
+                            <!-- JS products list -->
+                        </select>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="sale-qty">Quantity Sold (kg)</label>
+                            <input type="number" id="sale-qty" class="glass-input" min="0.1" step="any" placeholder="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-price">Selling Price per kg ($)</label>
+                            <input type="number" id="sale-price" class="glass-input" min="0.01" step="0.01" placeholder="6.50" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="sale-payment">Payment Status</label>
+                            <select id="sale-payment" class="filter-select">
+                                <option value="Paid">Paid</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sale-date">Sales Date</label>
+                            <input type="date" id="sale-date" class="glass-input" required>
+                        </div>
+                    </div>
+
+                    <div class="calc-preview-card">
+                        <div class="calc-preview-row">
+                            <span>Available Stock:</span>
+                            <span id="sale-stock-avail">0 kg</span>
+                        </div>
+                        <div class="calc-preview-row">
+                            <span>Total Transaction Sale:</span>
+                            <span id="sale-calc-total" style="color:var(--accent-green); font-weight:700">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="glass-btn" onclick="closeModal('sale-modal')">Cancel</button>
+                    <button type="submit" class="glass-btn glass-btn-primary">Generate Invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 6: Supplier Form -->
+    <div class="modal-overlay" id="supplier-modal">
+        <div class="glass-panel modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="supplier-modal-title">Register Supplier</h3>
+                <button class="modal-close-btn" onclick="closeModal('supplier-modal')">&times;</button>
+            </div>
+            <form id="supplier-form">
+                <input type="hidden" id="supplier-index">
+                <div class="modal-body production-form">
+                    <div class="form-group">
+                        <label for="sup-name">Supplier / Partner Name</label>
+                        <input type="text" id="sup-name" class="glass-input" placeholder="e.g. Global Metal Refining Corp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sup-rep">Representative Name</label>
+                        <input type="text" id="sup-rep" class="glass-input" placeholder="e.g. Sarah Jenkins" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="sup-phone">Phone Number</label>
+                            <input type="text" id="sup-phone" class="glass-input" placeholder="+1 (555) 012-3456" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sup-email">Email Address</label>
+                            <input type="email" id="sup-email" class="glass-input" placeholder="info@metalrefining.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sup-pending">Initial Pending Balance ($)</label>
+                        <input type="number" id="sup-pending" class="glass-input" min="0" step="any" value="0">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="glass-btn" onclick="closeModal('supplier-modal')">Cancel</button>
+                    <button type="submit" class="glass-btn glass-btn-primary">Save Supplier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 7: Customer Form -->
+    <div class="modal-overlay" id="customer-modal">
+        <div class="glass-panel modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="customer-modal-title">Register Customer</h3>
+                <button class="modal-close-btn" onclick="closeModal('customer-modal')">&times;</button>
+            </div>
+            <form id="customer-form-inner">
+                <input type="hidden" id="customer-index">
+                <div class="modal-body production-form">
+                    <div class="form-group">
+                        <label for="cust-name">Company Name</label>
+                        <input type="text" id="cust-name" class="glass-input" placeholder="e.g. Apex Electrical Supply" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cust-rep">Contact Representative</label>
+                        <input type="text" id="cust-rep" class="glass-input" placeholder="e.g. Mark Robinson" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="cust-phone">Phone Number</label>
+                            <input type="text" id="cust-phone" class="glass-input" placeholder="+1 (555) 987-6543" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cust-email">Email Address</label>
+                            <input type="email" id="cust-email" class="glass-input" placeholder="procurement@apexsupply.com" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="glass-btn" onclick="closeModal('customer-modal')">Cancel</button>
+                    <button type="submit" class="glass-btn glass-btn-primary">Register Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 8: Barcode/QR Mock Scan Overlay -->
+    <div class="modal-overlay" id="barcode-modal">
+        <div class="glass-panel modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Scan Barcode / QR Code</h3>
+                <button class="modal-close-btn" onclick="closeModal('barcode-modal')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding:24px">
+                <div class="barcode-scanner-mock">
+                    <div class="scanner-video-sim"></div>
+                    <div class="scanner-focus-corners"></div>
+                    <div class="scanner-overlay-laser"></div>
+                    <div class="scanner-prompt">Align barcode inside frame</div>
+                </div>
+                <div class="form-group">
+                    <label for="scan-sim-value">Simulate Scan Input (or enter code)</label>
+                    <select id="scan-sim-value" class="filter-select" style="margin-top:8px">
+                        <option value="raw-copper">Raw Copper Ore Stock (Low Stock Simulation)</option>
+                        <option value="raw-steel">Raw Steel Ingot Stock</option>
+                        <option value="prod-wire">Copper Wire Coiled Product</option>
+                        <option value="prod-beam">H-Beam structural steel Product</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="glass-btn" onclick="closeModal('barcode-modal')">Cancel</button>
+                <button type="button" class="glass-btn glass-btn-primary" id="btn-simulate-scan">Trigger Scan Event</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION STACK -->
+    <div class="toast-container" id="toast-stack">
+        <!-- JS toasts slide in here -->
+    </div>
+
+    <!-- App State Engine & Render Controllers -->
+    <script src="app.js"></script>
+</body>
+</html>
